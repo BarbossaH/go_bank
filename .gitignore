@@ -20,3 +20,4 @@
 # IDE or editor files
 .vscode/
 .idea/
+.env
