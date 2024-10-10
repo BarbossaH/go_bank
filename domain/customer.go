@@ -15,14 +15,23 @@ type Customer struct {
 	Status   string //is customer or not
 }
 
-func(c Customer)ToDto() dto.CustomerRes{
+func(c Customer)statusAsText()string{
+	statusAsText:="active"
+	if c.Status=="0" {
+		statusAsText="inactive"
+	}
+	return statusAsText
+}
+
+func(c Customer)CustomerToDto() dto.CustomerRes{
+
 	return dto.CustomerRes{
 		Id: c.Id,
 		Name: c.Name,
-		Status: c.Status,
 		Birthday: c.Birthday,
 		Zipcode: c.Zipcode,
 		City: c.City,
+		Status: c.statusAsText(),
 	}
 }
 

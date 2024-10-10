@@ -4,12 +4,8 @@ import (
 	"bankserver/errs"
 	"bankserver/logger"
 	"database/sql"
-	"fmt"
-	"os"
-	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -90,6 +86,10 @@ func(d CustomerRepositoryDB)FindById(id string)(*Customer,*errs.AppError){
 	return &c, nil
 }
 
+func InitCustomerRepositoryDB(db *sqlx.DB)CustomerRepositoryDB{
+	return CustomerRepositoryDB{db}
+}
+
 // func(d CustomerRepositoryDB)FindById(id string)(*Customer, *errs.AppError){
 // 	customerSql:="select customer_id, name, city, zipcode, birthday, status from customers where customer_id = $1"
 // 	row:=d.client.QueryRow(customerSql,id)
@@ -108,14 +108,13 @@ func(d CustomerRepositoryDB)FindById(id string)(*Customer,*errs.AppError){
 // 	return &c, nil
 // }
 
-
-
-func ConnectDB() CustomerRepositoryDB{
+//-------
+//actually, here has two responsibilities, connect the db server and create repositoryDB object
+/*func ConnectDB() CustomerRepositoryDB{
 	err:=godotenv.Load(".env")
 	if err!=nil{
 		logger.Error("Error loading .env file")
 	}
-
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
@@ -142,4 +141,5 @@ func ConnectDB() CustomerRepositoryDB{
 
 	fmt.Println("DB connect successfully")
 	return CustomerRepositoryDB{client}
-}
+}*/
+//------

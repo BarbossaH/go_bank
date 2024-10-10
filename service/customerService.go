@@ -8,7 +8,7 @@ import (
 
 //supply all kinds of interface
 type ICustomerService interface {
-	GetAllCustomers(string)([]domain.Customer,*errs.AppError)
+	GetAllCustomers(string)([]dto.CustomerRes,*errs.AppError)
 	GetCustomer(string)(*dto.CustomerRes,*errs.AppError)
 }
 
@@ -20,8 +20,17 @@ type DefaultCustomerService struct {
 }
 
 //调用数据的真实提供的接口，比如查找数据，增加数据等等CRUD操作
-func(s DefaultCustomerService)GetAllCustomers(status string)([]domain.Customer,*errs.AppError){
-	return s.repo.FindAll(status)
+func(s DefaultCustomerService)GetAllCustomers(status string)([]dto.CustomerRes,*errs.AppError){
+	cs,err:=s.repo.FindAll(status)
+	customers := make([]dto.CustomerRes, 0, len(cs))
+	if err!=nil{
+		return nil,err
+	}
+	for _, v := range cs {
+		c:=v.CustomerToDto()
+		customers =append(customers, c)
+	}
+	return customers,nil
 }
 
 func(s DefaultCustomerService)GetCustomer(id string)(*dto.CustomerRes,*errs.AppError){
@@ -30,7 +39,7 @@ func(s DefaultCustomerService)GetCustomer(id string)(*dto.CustomerRes,*errs.AppE
 	if err!=nil{
 		return nil,err
 	}
-	res:=c.ToDto()
+	res:=c.CustomerToDto()
 
 	return &res, nil
 }
