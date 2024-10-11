@@ -6,12 +6,12 @@ import (
 )
 
 type Account struct {
-	AccountId   string
-	CustomerId  string 
-	OpeningDate string
-	AccountType string
-	Amount      float64
-	Status      string
+	AccountId   string `db:"account_id"`
+	CustomerId   string  `db:"customer_id"`
+	OpeningDate  string  `db:"opening_date"`
+	AccountType  string  `db:"account_type"`
+	Amount       float64 `db:"amount"`
+	Status       string  `db:"status"`
 }
 
 func(a Account)AccountToDto() dto.CreateAccountRes{
@@ -22,4 +22,10 @@ func(a Account)AccountToDto() dto.CreateAccountRes{
 
 type IAccountRepository interface {
 	InsertAccount(Account) (*Account, *errs.AppError)
+	FindAccountById(string)(*Account,*errs.AppError)
+	SaveTransaction(t Transaction)(*Transaction,*errs.AppError)
+}
+
+func(a Account)CanWithDraw(amount float64)bool{
+	return a.Amount>amount
 }
